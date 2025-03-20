@@ -23,16 +23,7 @@ export default function RootLayout({ children }) {
   return (
     <ClerkProvider appearance={{ variables: { colorPrimary: "#624cf5" } }}>
       <html lang="en">
-        <body className={cn("antialiased bg-red ", IBMPlex.variable)}>
-          <header className="flex justify-end items-center p-4 gap-4 h-16">
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
+        <body className={cn("antialiased border ", IBMPlex.variable)}>
           {children}
         </body>
       </html>
