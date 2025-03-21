@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 import { clerkClient } from "@clerk/nextjs/server";
-import { connectDB } from "@/lib/mongodb";
+import { connectDB } from "../../../../lib/database/mongodb";
 import User from "../../../../lib/database/models/User.model"; // Import Mongoose User model
 import { createUser, updateUser, deleteUser } from "@/lib/actions/User.actions";
 
