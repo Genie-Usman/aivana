@@ -6,16 +6,16 @@ import { connectDB } from "../../../../lib/database/mongodb";
 import User from "../../../../lib/database/models/User.model"; // Import Mongoose User model
 import { createUser, updateUser, deleteUser } from "@/lib/actions/User.actions";
 
+
 export async function POST(req) {
-  await connectDB(); // Ensure MongoDB connection
+  console.log("📩 Incoming webhook request...");
 
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
   if (!WEBHOOK_SECRET) {
-    console.error("❌ WEBHOOK_SECRET is missing in environment variables.");
-    return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+    console.error("❌ WEBHOOK_SECRET is missing!");
+    return NextResponse.json({ error: "Server misconfiguration" }, { status: 500 });
   }
 
-  // Extract and verify Svix headers
   const headerPayload = headers();
   const svix_id = headerPayload.get("svix-id");
   const svix_timestamp = headerPayload.get("svix-timestamp");
@@ -23,10 +23,9 @@ export async function POST(req) {
 
   if (!svix_id || !svix_timestamp || !svix_signature) {
     console.error("❌ Missing Svix headers.");
-    return NextResponse.json({ error: "Invalid request headers" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid headers" }, { status: 400 });
   }
 
-  // Parse and verify webhook payload
   const payloadBuffer = await req.arrayBuffer();
   const payloadString = Buffer.from(payloadBuffer).toString("utf-8");
   const wh = new Webhook(WEBHOOK_SECRET);
@@ -39,70 +38,71 @@ export async function POST(req) {
       "svix-signature": svix_signature,
     });
   } catch (err) {
-    console.error("❌ Error verifying webhook:", err);
-    return NextResponse.json({ error: "Webhook verification failed" }, { status: 400 });
+    console.error("❌ Webhook verification failed:", err);
+    return NextResponse.json({ error: "Invalid webhook signature" }, { status: 400 });
   }
+
+  console.log("✅ Webhook verified:", evt.type, evt.data);
 
   const { id } = evt.data;
   const eventType = evt.type;
 
   try {
     if (eventType === "user.created") {
-      const { email_addresses, image_url, first_name, last_name, username } = evt.data;
+      console.log(`🆕 Handling user.created event for Clerk ID: ${id}`);
 
-      // 🔍 Check if user already exists in MongoDB
-      const existingUser = await User.findOne({ clerkId: id });
-      if (existingUser) {
-        console.log("✅ User already exists:", existingUser);
-        return NextResponse.json({ message: "User already exists", user: existingUser });
-      }
+      const {id, email_addresses, image_url, first_name, last_name, username } = evt.data;
 
-      // 🆕 Create new user
-      const newUser = await createUser({
+      const user = {
         clerkId: id,
         email: email_addresses?.[0]?.email_address || "no-email@example.com",
         username: username || `user_${id.slice(0, 6)}`,
         firstName: first_name || "",
         lastName: last_name || "",
         photo: image_url || "",
-      });
+      };
 
-      // Update Clerk metadata with MongoDB user ID
-      if (newUser) {
-        await clerkClient.users.updateUserMetadata(id, {
-          publicMetadata: { userId: newUser._id.toString() },
-        });
+      const newUser = await createUser(user);
+
+      if (!newUser) {
+        console.log("⚠️ User was NOT created (already exists?)");
+        return NextResponse.json({ error: "User already exists" }, { status: 409 });
       }
 
-      console.log("✅ New User Created:", newUser);
-      return NextResponse.json({ message: "User created successfully", user: newUser });
+      console.log("✅ User successfully created:", newUser);
+
+      return NextResponse.json({ message: "User created", user: newUser });
     }
 
     if (eventType === "user.updated") {
-      const { image_url, first_name, last_name, username } = evt.data;
+      console.log(`✏️ Handling user.updated event for Clerk ID: ${id}`);
 
-      // Update user by Clerk ID
-      const updatedUser = await updateUser(id, {
+      const { image_url, first_name, last_name, username } = evt.data;
+      const user = {
         firstName: first_name || "",
         lastName: last_name || "",
         username: username || `user_${id.slice(0, 6)}`,
         photo: image_url || "",
-      });
+      };
 
-      console.log("🔄 User Updated:", updatedUser);
-      return NextResponse.json({ message: "User updated successfully", user: updatedUser });
+      const updatedUser = await updateUser(id, user);
+      console.log("✅ User updated:", updatedUser);
+      return NextResponse.json({ message: "User updated", user: updatedUser });
     }
 
     if (eventType === "user.deleted") {
+      console.log(`🗑️ Handling user.deleted event for Clerk ID: ${id}`);
+
       const deletedUser = await deleteUser(id);
-      console.log("🗑️ User Deleted:", deletedUser);
-      return NextResponse.json({ message: "User deleted successfully", user: deletedUser });
+      console.log("✅ User deleted:", deletedUser);
+      return NextResponse.json({ message: "User deleted", user: deletedUser });
     }
 
-    console.log(`⚠️ Unhandled webhook event: ${eventType}`);
-    return NextResponse.json({ message: "Event received but not handled" });
+    console.log(`⚠️ Unhandled event type: ${eventType}`);
+    return NextResponse.json({ message: "Unhandled event" });
   } catch (error) {
     console.error(`❌ Error processing ${eventType}:`, error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
+
