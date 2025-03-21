@@ -1,7 +1,7 @@
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { Webhook } from 'svix';
-import { clerkClient } from '@clerk/nextjs';
+import { clerkClient } from '@clerk/nextjs/server';
 import { createUser, updateUser, deleteUser } from '../../../../lib/actions/User.actions';
 
 export async function POST(req) {
@@ -22,13 +22,13 @@ export async function POST(req) {
     return NextResponse.json({ error: 'Invalid request headers' }, { status: 400 });
   }
 
-  const payload = await req.json();
-  const body = JSON.stringify(payload);
+  const payloadBuffer = await req.arrayBuffer();
+  const payloadString = Buffer.from(payloadBuffer).toString('utf-8');
   const wh = new Webhook(WEBHOOK_SECRET);
 
   let evt;
   try {
-    evt = wh.verify(body, {
+    evt = wh.verify(payloadString, {
       'svix-id': svix_id,
       'svix-timestamp': svix_timestamp,
       'svix-signature': svix_signature,
@@ -62,6 +62,7 @@ export async function POST(req) {
         });
       }
 
+      console.log('User created successfully:', newUser);
       return NextResponse.json({ message: 'User created successfully', user: newUser });
     }
 
@@ -76,11 +77,13 @@ export async function POST(req) {
       };
 
       const updatedUser = await updateUser(id, user);
+      console.log('User updated successfully:', updatedUser);
       return NextResponse.json({ message: 'User updated successfully', user: updatedUser });
     }
 
     if (eventType === 'user.deleted') {
       const deletedUser = await deleteUser(id);
+      console.log('User deleted successfully:', deletedUser);
       return NextResponse.json({ message: 'User deleted successfully', user: deletedUser });
     }
 
