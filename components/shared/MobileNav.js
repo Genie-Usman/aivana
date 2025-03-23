@@ -7,7 +7,7 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
-import { SignedIn, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { navLinks } from "@/constants";
 import Image from "next/image";
 import Link from "next/link";
@@ -28,15 +28,15 @@ const MobileNav = () => {
             <nav className="flex items-center gap-3">
                 <SignedIn>
                     <UserButton />
-                    
+
                     {/* Mobile Sidebar (Sheet) */}
                     <Sheet>
                         <SheetTrigger asChild>
-                            <Image 
-                            src='/assets/icons/menu.svg'
-                            alt="menu"
-                            height={32}
-                            width={32}
+                            <Image
+                                src='/assets/icons/menu.svg'
+                                alt="menu"
+                                height={32}
+                                width={32}
                             />
                         </SheetTrigger>
 
@@ -52,11 +52,10 @@ const MobileNav = () => {
                                         <li key={link.route}>
                                             <Link
                                                 href={link.route}
-                                                className={`flex items-center gap-3 px-4 py-3 rounded-md font-semibold transition-all ${
-                                                    isActive
+                                                className={`flex items-center gap-3 px-4 py-3 rounded-md font-semibold transition-all ${isActive
                                                         ? "bg-gradient-to-r from-purple-500 to-purple-700 text-white"
                                                         : "text-gray-700 hover:bg-gray-100"
-                                                }`}
+                                                    }`}
                                             >
                                                 <Image
                                                     src={link.icon}
@@ -74,6 +73,14 @@ const MobileNav = () => {
                         </SheetContent>
                     </Sheet>
                 </SignedIn>
+                <SignedOut>
+                    <Button
+                        asChild
+                        className="w-full flex items-center justify-center py-3 px-6 rounded-lg font-semibold text-[16px] focus-visible:ring-0 bg-gradient-to-r from-[#887ae1] to-[#6a5acd] text-white transition-all hover:opacity-90"
+                    >
+                        <Link href="/sign-up">Login</Link>
+                    </Button>
+                </SignedOut>
             </nav>
         </header>
     );
