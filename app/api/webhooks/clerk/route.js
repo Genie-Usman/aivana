@@ -3,11 +3,11 @@ import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 import { clerkClient } from "@clerk/nextjs/server";
 import { connectDB } from "../../../../lib/database/mongodb";
-import User from "../../../../lib/database/models/User.model"; // Import Mongoose User model
+import User from "../../../../lib/database/models/User.model";
 import { createUser, updateUser, deleteUser } from "@/lib/actions/User.actions";
 
 export async function POST(req) {
-  await connectDB(); // Ensure MongoDB connection
+  await connectDB();
 
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
   if (!WEBHOOK_SECRET) {
