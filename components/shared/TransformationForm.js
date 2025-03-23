@@ -21,6 +21,7 @@ import { CustomField } from "./CustomField";
 import { transformationTypes } from "../../constants";
 import { useState, useTransition } from "react";
 import { debounce, deepMergeObjects } from "@/lib/utils";
+import MediaUploader from "./MediaUploader";
 
 export const formSchema = z.object({
     title: z.string().min(1, "Title is required"),
@@ -178,8 +179,25 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                         )}
                     />
                 )}
-                <div className="flex flex-col gap-4">
 
+                <div className="grid h-fit min-h-[200px] grid-cols-1 gap-5 py-4 md:grid-cols-2">
+                <CustomField
+                        control={form.control}
+                        name="publicId"
+                        className="flex flex-col size-full"
+                        render={({ field }) => (
+                            <MediaUploader
+                                onChange={field.onChange}
+                                setImage={setImage}
+                                publicId={field.value}
+                                image={image}
+                                type={type}
+                            />
+                        )}
+                    />
+                </div>
+
+                <div className="flex flex-col gap-4">
                     <Button
                         type="button"
                         className="bg-[url('/assets/images/gradient-bg.svg')] bg-cover rounded-full py-4 px-6 font-semibold text-[16px] leading-[140%]h-[50px] w-full md:h-[54px] text-white capitalize"

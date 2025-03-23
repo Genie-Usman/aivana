@@ -25,6 +25,7 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <body className={cn("antialiased border ", IBMPlex.variable)}>
           {children}
+          
         </body>
       </html>
     </ClerkProvider>
