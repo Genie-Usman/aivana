@@ -33,7 +33,7 @@ const Sidebar = () => {
                                             href={link.route}
                                             className={`flex items-center gap-4 px-4 py-3 rounded-3xl font-semibold text-[16px] transition-all ${
                                                 isActive
-                                                    ? "bg-gradient-to-r from-[#887ae1] to-[#6a5acd] text-white shadow-md"
+                                                    ? "bg-[url('/assets/images/gradient-bg.svg')] text-white shadow-md"
                                                     : "text-gray-700 hover:bg-gray-100"
                                             }`}
                                         >
@@ -62,7 +62,7 @@ const Sidebar = () => {
                                             href={link.route}
                                             className={`flex items-center gap-4 px-4 py-3 rounded-3xl font-semibold text-[16px] transition-all ${
                                                 isActive
-                                                    ? "bg-gradient-to-r from-[#887ae1] to-[#6a5acd] text-white shadow-md"
+                                                    ? "bg-[url('/assets/images/gradient-bg.svg')] text-white shadow-md"
                                                     : "text-gray-700 hover:bg-gray-100"
                                             }`}
                                         >
@@ -94,7 +94,7 @@ const Sidebar = () => {
                 <SignedOut>
                     <Button
                         asChild
-                        className="w-full flex items-center justify-center py-3 px-6 rounded-lg font-semibold text-[16px] focus-visible:ring-0 bg-gradient-to-r from-[#887ae1] to-[#6a5acd] text-white transition-all hover:opacity-90"
+                        className="w-full flex items-center justify-center py-3 px-6 rounded-lg font-semibold text-[16px] focus-visible:ring-0 bg-[url('/assets/images/gradient-bg.svg')] text-white transition-all hover:opacity-90"
                     >
                         <Link href="/sign-up">Login</Link>
                     </Button>

@@ -76,7 +76,7 @@ const MobileNav = () => {
                 <SignedOut>
                     <Button
                         asChild
-                        className="w-full flex items-center justify-center py-3 px-6 rounded-lg font-semibold text-[16px] focus-visible:ring-0 bg-gradient-to-r from-[#887ae1] to-[#6a5acd] text-white transition-all hover:opacity-90"
+                        className="w-full flex items-center justify-center py-3 px-6 rounded-lg font-semibold text-[16px] focus-visible:ring-0 bg-[url('/assets/images/gradient-bg.svg')] text-white transition-all hover:opacity-90"
                     >
                         <Link href="/sign-up">Login</Link>
                     </Button>
