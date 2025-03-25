@@ -30,16 +30,44 @@ const TransformedImage = ({
     }
   }, [image, transformationConfig]); // Re-run when image or transformationConfig updates
 
-  const downloadHandler = (e) => {
-    e.preventDefault();
+const downloadHandler = async (
+    e,
+    { image, transformationConfig, title },
+    { saveToDb = false, userId, revalidatePath }
+  ) => {
+    e?.preventDefault();
   
-    // Ensure width & height exist (use fallback values if missing)
-    download(getCldImageUrl({
-        width: image?.width,
-        height: image?.height,
-        src: image?.publicId,
-        ...transformationConfig
-      }), title)
+    if (!image?.publicId) {
+      throw new Error("Missing required image data");
+    }
+  
+    try {
+      // Generate Cloudinary URL
+      const imageUrl = getCldImageUrl({
+        width: image?.width || 1024,  // Fallback dimensions
+        height: image?.height || 1024,
+        src: image.publicId,
+        ...transformationConfig,
+      });
+  
+      // Optional DB backup
+      if (saveToDb) {
+        if (!userId || !revalidatePath) {
+          throw new Error("userId and revalidatePath required for DB save");
+        }
+        await addImage({
+          image: { ...image, title },
+          userId,
+          path: revalidatePath,
+        });
+      }
+  
+      // Trigger download
+      await download(imageUrl, title);
+    } catch (error) {
+      console.error("Download workflow failed:", error);
+      throw error; // Propagate to UI for user feedback
+    }
   };
   
   
