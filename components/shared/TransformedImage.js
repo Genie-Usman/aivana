@@ -113,7 +113,7 @@ const downloadHandler = async (
               debounce(() => {
                 console.error("Error loading transformed image");
                 setIsTransforming(false);
-              }, 5000)()
+              }, 10000)()
             }
             {...transformationConfig}
           />

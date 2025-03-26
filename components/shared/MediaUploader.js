@@ -42,6 +42,7 @@ const MediaUploader = ({ onChange, setImage, publicId, image, type }) => {
         multiple: false,
         resourceType: "image",
       }}
+      
       onSuccess={successHandler}
       onError={errorHandler}
     >
