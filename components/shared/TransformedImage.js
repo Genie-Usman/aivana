@@ -92,7 +92,7 @@ const downloadHandler = async (e) => {
           />
 
           {isTransforming && (
-            <div className="absolute inset-0 flex items-center justify-center bg-dark-700/80 rounded-[10px]">
+            <div className="absolute inset-0 flex items-center justify-center bg-[#384262]/80 rounded-[10px]">
               <Image
                 src="/assets/icons/spinner.svg"
                 alt="Transforming Image"

@@ -183,6 +183,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                         render={({ field }) => (
                             <Select
                                 onValueChange={(value) => selectHandler(value, field.onChange)}
+                                value={field.value}
                             >
                                 <SelectTrigger className="w-full border-2 border-[#BCB6FF]/20 shadow-sm shadow-[#BCB6FF]/15 rounded-[16px] h-[50px] md:h-[54px] text-[#2B3674] font-semibold text-[16px] leading-[140%] disabled:opacity-100 placeholder:text-[#7986AC]/50 px-4 py-3 focus:ring-offset-0 focus-visible:ring-transparent focus:ring-transparent focus-visible:ring-0 focus-visible:outline-none bg-white">
                                     <SelectValue placeholder="Select size" />
