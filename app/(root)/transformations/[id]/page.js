@@ -7,6 +7,7 @@ import TransformedImage from "../../../../components/shared/TransformedImage";
 import { Button } from "@/components/ui/button";
 import { getImageById } from "../../../../lib/actions/Image.actions";
 import { getImageSize } from "../../../../lib/utils";
+import { DeleteConfirmation } from "../../../../components/shared/DeleteConfirmation";
 
 const ImageDetails = async ({ params }) => {
   const { id } = params;
@@ -98,6 +99,7 @@ console.log("Image Author ID:", image.author?.clerkId);
               Update Image
             </Link>
           </Button>
+          <DeleteConfirmation imageId={image._id} />
         </div>
       )}
     </section>
