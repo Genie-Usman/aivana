@@ -98,7 +98,8 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                         setImage(data)
                         router.push(`/transformations/${newImage._id}`)
                     }
-                } else if (action === "Update") {
+                }
+                 if (action === "Update") {
                     const updatedImage = await updateImage({
                         image: { ...imageData, _id: data._id },
                         userId,
@@ -126,7 +127,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
             height: imageSize.height,
         }));
         setNewTransformation(transformationType.config);
-        onChange(value);
+        return onChange(value);
     };
 
     const inputHandler = debounce((fieldName, value, type, onChange) => {
@@ -137,12 +138,14 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                 [fieldName === "prompt" ? "prompt" : "to"]: value,
             },
         }));
-        onChange(value);
+        return onChange(value);
     }, 500);
 
     const transformHandler = () => {
         setIsTransforming(true);
+
         setTransformationConfig(deepMergeObjects(newTransformation, transformationConfig));
+
         setNewTransformation(null);
         startTransition(async () => {
             await updateCredits(userId, creditFee);

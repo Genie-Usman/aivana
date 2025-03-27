@@ -30,44 +30,19 @@ const TransformedImage = ({
     }
   }, [image, transformationConfig]); // Re-run when image or transformationConfig updates
 
-const downloadHandler = async (
-    e,
-    { image, transformationConfig, title },
-    { saveToDb = false, userId, revalidatePath }
-  ) => {
+const downloadHandler = async (e) => {
     e?.preventDefault();
   
     if (!image?.publicId) {
       throw new Error("Missing required image data");
     }
   
-    try {
-      // Generate Cloudinary URL
-      const imageUrl = getCldImageUrl({
-        width: image?.width || 1024,  // Fallback dimensions
-        height: image?.height || 1024,
-        src: image.publicId,
-        ...transformationConfig,
-      });
-  
-      // Optional DB backup
-      if (saveToDb) {
-        if (!userId || !revalidatePath) {
-          throw new Error("userId and revalidatePath required for DB save");
-        }
-        await addImage({
-          image: { ...image, title },
-          userId,
-          path: revalidatePath,
-        });
-      }
-  
-      // Trigger download
-      await download(imageUrl, title);
-    } catch (error) {
-      console.error("Download workflow failed:", error);
-      throw error; // Propagate to UI for user feedback
-    }
+    download(getCldImageUrl({
+      width: image?.width,
+      height: image?.height,
+      src: image?.publicId,
+      ...transformationConfig
+    }), title)
   };
   
   
@@ -79,7 +54,7 @@ const downloadHandler = async (
           Transformed Image
         </h3>
 
-        {hasDownload && imageUrl && (
+        {hasDownload && (
           <button
             className="font-medium text-[14px] leading-[120%] mt-2 flex items-center gap-2 px-2"
             onClick={downloadHandler}
@@ -106,15 +81,13 @@ const downloadHandler = async (
             placeholder={dataUrl}
             className="h-fit min-h-72 w-full rounded-[10px] border border-dashed bg-purple-100/20 object-cover p-2 transition-all duration-500 ease-in-out"
             onLoad={() => {
-              console.log("Image loaded successfully");
-              setIsTransforming(false);
+              setIsTransforming && setIsTransforming(false);
             }}
-            onError={() =>
+            onError={() => {
               debounce(() => {
-                console.error("Error loading transformed image");
-                setIsTransforming(false);
-              }, 10000)()
-            }
+                setIsTransforming && setIsTransforming(false);
+              }, 8000)()
+            }}
             {...transformationConfig}
           />
 
