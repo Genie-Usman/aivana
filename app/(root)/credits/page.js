@@ -10,7 +10,7 @@ import { getUserById } from "../../../lib/actions/User.actions";
 import Checkout from "../../../components/shared/Checkout";
 
 const Credits = async () => {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) redirect("/sign-in");
 
@@ -20,20 +20,20 @@ const Credits = async () => {
     <>
       <Header
         title="Buy Credits"
-        subtitle="Choose a credit package that suits your needs!"
+        subTitle="Choose a credit package that suits your needs!"
       />
 
       <section>
-        <ul className="credits-list">
+        <ul className=" mt-11 grid grid-cols-1 gap-5 sm:grid-cols-2 md:gap-9 xl:grid-cols-3">
           {plans.map((plan) => (
-            <li key={plan.name} className="credits-item">
-              <div className="flex-center flex-col gap-3">
+            <li key={plan.name} className="w-full rounded-[16px] border-2 border-[#BCB6FF]/20 bg-white p-8 shadow-xl shadow-[#BCB6FF]/20 lg:max-w-none">
+              <div className="flex items-center justify-center flex-col gap-3">
                 <Image src={plan.icon} alt="check" width={50} height={50} />
-                <p className="p-20-semibold mt-2 text-purple-500">
+                <p className="font-semibold text-[20px] leading-[140%] mt-2 text-[#7857FF]">
                   {plan.name}
                 </p>
-                <p className="h1-semibold text-dark-600">${plan.price}</p>
-                <p className="p-16-regular">{plan.credits} Credits</p>
+                <p className="text-[36px] font-semibold sm:text-[44px] leading-[120%] sm:leading-[56px] text-[#2B3674]">${plan.price}</p>
+                <p className="font-normal text-[16px] leading-[140%]">{plan.credits} Credits</p>
               </div>
 
               {/* Inclusions */}
@@ -51,13 +51,14 @@ const Credits = async () => {
                       width={24}
                       height={24}
                     />
-                    <p className="p-16-regular">{inclusion.label}</p>
+                    <p className="font-normal text-[16px] leading-[140%]">{inclusion.label}</p>
                   </li>
                 ))}
               </ul>
 
               {plan.name === "Free" ? (
-                <Button variant="outline" className="credits-btn">
+                <Button variant="outline" 
+                className=" w-full rounded-full bg-[#F4F7FE] bg-cover text-[#7857FF] hover:text-[#7857FF]">
                   Free Consumable
                 </Button>
               ) : (
