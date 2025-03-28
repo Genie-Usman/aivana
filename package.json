@@ -21,6 +21,7 @@
     "cloudinary": "^2.6.0",
     "clsx": "^2.1.1",
     "dlx": "^0.2.1",
+    "framer-motion": "^12.6.2",
     "lucide-react": "^0.483.0",
     "mongodb": "^6.15.0",
     "mongoose": "^8.12.1",
