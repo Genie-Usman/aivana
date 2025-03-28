@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 import Header from "../../../components/shared/Header";
 import Collection from "../../../components/shared/Collection";
-import { getUserImages } from "../../../lib/actions/Image.actions";
+import { getAllImages, getUserImages } from "../../../lib/actions/Image.actions";
 import { getUserById } from "../../../lib/actions/User.actions";
 
 const Profile = async ({ searchParams }) => {
