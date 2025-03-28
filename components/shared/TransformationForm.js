@@ -130,16 +130,19 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
         return onChange(value);
     };
 
-    const inputHandler = debounce((fieldName, value, type, onChange) => {
-        setNewTransformation((prevState) => ({
+    const inputHandler = (fieldName, value, type, onChange) => {
+        debounce(() => {
+          setNewTransformation((prevState) => ({
             ...prevState,
             [type]: {
-                ...prevState?.[type],
-                [fieldName === "prompt" ? "prompt" : "to"]: value,
-            },
-        }));
-        return onChange(value);
-    }, 500);
+              ...prevState?.[type],
+              [fieldName === 'prompt' ? 'prompt' : 'to' ]: value 
+            }
+          }))
+        }, 1000)();
+          
+        return onChange(value)
+      }
 
     const transformHandler = () => {
         setIsTransforming(true);
