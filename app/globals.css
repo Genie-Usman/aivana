@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
-  body {
-    font-family: var(--font-ibm-plex);
-    overflow-x: hidden;
-  }
+body {
+  font-family: var(--font-ibm-plex);
+  overflow-x: hidden;
+}
 
-  /* Custom Scrollbar */
+/* Custom Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px; 
+  width: 6px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -26,6 +26,12 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #D3D3D3;
   /* color: ; */
+}
+
+.sonner-toast {
+  --normal-bg: var(--background);
+  --normal-border: var(--border);
+  --normal-text: var(--foreground);
 }
 
 /* =====  CLERK OVERRIDES */

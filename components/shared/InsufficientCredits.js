@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
+import { motion } from "framer-motion";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,54 +19,78 @@ export const InsufficientCreditsModal = () => {
 
   return (
     <AlertDialog defaultOpen>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <div className="flex-between">
-            <p className="font-semibold text-[16px] leading-[140%] text-[#7986AC]">Insufficient Credits</p>
-            <AlertDialogCancel
-              className="border-0 p-0 hover:bg-transparent"
-              onClick={() => router.push("/profile")}
+      <AlertDialogContent className="max-w-md rounded-2xl border-0 p-6 shadow-lg bg-white">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
+          {/* Header Section */}
+          <AlertDialogHeader className="relative">
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-sm font-semibold text-[#624CF5] uppercase tracking-wide">
+                Insufficient Credits
+              </p>
+              <AlertDialogCancel
+                className="rounded-full p-1 hover:bg-gray-100 transition-colors"
+                onClick={() => router.push("/profile")}
+              >
+                <Image
+                  src="/assets/icons/close.svg"
+                  alt="Close"
+                  width={20}
+                  height={20}
+                  className="opacity-70 hover:opacity-100 transition-opacity"
+                />
+              </AlertDialogCancel>
+            </div>
+
+            {/* Animated Image */}
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.15, ease: "easeOut" }}
+              className="mx-auto mb-6"
             >
               <Image
-                src="/assets/icons/close.svg"
-                alt="credit coins"
-                width={24}
-                height={24}
-                className="cursor-pointer"
+                src="/assets/images/stacked-coins.png"
+                alt="Credit coins"
+                width={320}
+                height={106}
+                className="object-contain drop-shadow-md"
               />
-            </AlertDialogCancel>
-          </div>
+            </motion.div>
 
-          <Image
-            src="/assets/images/stacked-coins.png"
-            alt="credit coins"
-            width={462}
-            height={122}
-          />
+            <AlertDialogTitle className="text-2xl font-extrabold text-gray-900 text-center mb-3">
+              Oops... You're out of credits!
+            </AlertDialogTitle>
 
-          <AlertDialogTitle className="font-bold text-[24px] leading-[120%] text-[#2B3674]">
-            Oops.... Looks like you&#39;ve run out of free credits!
-          </AlertDialogTitle>
+            <AlertDialogDescription className="text-center text-gray-500 leading-relaxed">
+              No worries! Get more credits to continue using our services.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
 
-          <AlertDialogDescription className="font-normal text-[16px] leading-[140%] py-3">
-            No worries, though - you can keep enjoying our services by grabbing
-            more credits.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel
-            className="py-4 px-6 flex-center gap-3 rounded-full font-semibold text-[16px] leading-[140%] focus-visible:ring-offset-0 focus-visible:ring-transparent w-full bg-purple-100 text-[#7986AC]"
-            onClick={() => router.push("/profile")}
-          >
-            No, Cancel
-          </AlertDialogCancel>
-          <AlertDialogAction
-            className="py-4 px-6 flex-center gap-3 rounded-full font-semibold text-[16px] leading-[140%] focus-visible:ring-offset-0 focus-visible:ring-transparent w-full bg-purple-gradient  bg-cover"
-            onClick={() => router.push("/credits")}
-          >
-            Yes, Proceed
-          </AlertDialogAction>
-        </AlertDialogFooter>
+          {/* Footer Section */}
+          <AlertDialogFooter className="flex flex-col sm:flex-row gap-3 mt-6">
+            <motion.div whileHover={{ scale: 1.015 }} whileTap={{ scale: 0.98 }} className="w-full">
+              <AlertDialogCancel
+                className="w-full py-3 px-6 cursor-pointer rounded-xl font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors shadow-sm"
+                onClick={() => router.push("/profile")}
+              >
+                No, Cancel
+              </AlertDialogCancel>
+            </motion.div>
+            
+            <motion.div whileHover={{ scale: 1.015 }} whileTap={{ scale: 0.98 }} className="w-full">
+              <AlertDialogAction
+                className="w-full py-3 cursor-pointer px-6 rounded-xl font-medium text-white bg-[url('/assets/images/gradient-bg.svg')] hover:from-purple-700 hover:to-[#624CF5]/90 transition-all shadow-md hover:shadow-lg"
+                onClick={() => router.push("/credits")}
+              >
+                Yes, Get Credits
+              </AlertDialogAction>
+            </motion.div>
+          </AlertDialogFooter>
+        </motion.div>
       </AlertDialogContent>
     </AlertDialog>
   );

@@ -11,7 +11,6 @@ export async function POST(req) {
 
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
   if (!WEBHOOK_SECRET) {
-    console.error("❌ WEBHOOK_SECRET is missing in environment variables.");
     return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
   }
 
@@ -22,7 +21,6 @@ export async function POST(req) {
   const svix_signature = headerPayload.get("svix-signature");
 
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    console.error("❌ Missing Svix headers.");
     return NextResponse.json({ error: "Invalid request headers" }, { status: 400 });
   }
 
@@ -53,7 +51,6 @@ export async function POST(req) {
       // 🔍 Check if user already exists in MongoDB
       const existingUser = await User.findOne({ clerkId: id });
       if (existingUser) {
-        console.log("✅ User already exists:", existingUser);
         return NextResponse.json({ message: "User already exists", user: existingUser });
       }
 
@@ -74,7 +71,6 @@ export async function POST(req) {
         });
       }
 
-      console.log("✅ New User Created:", newUser);
       return NextResponse.json({ message: "User created successfully", user: newUser });
     }
 
@@ -89,17 +85,15 @@ export async function POST(req) {
         photo: image_url || "",
       });
 
-      console.log("🔄 User Updated:", updatedUser);
       return NextResponse.json({ message: "User updated successfully", user: updatedUser });
     }
 
     if (eventType === "user.deleted") {
       const deletedUser = await deleteUser(id);
-      console.log("🗑️ User Deleted:", deletedUser);
+
       return NextResponse.json({ message: "User deleted successfully", user: deletedUser });
     }
 
-    console.log(`⚠️ Unhandled webhook event: ${eventType}`);
     return NextResponse.json({ message: "Event received but not handled" });
   } catch (error) {
     console.error(`❌ Error processing ${eventType}:`, error);

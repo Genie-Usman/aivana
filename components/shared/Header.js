@@ -1,12 +1,18 @@
-import React from 'react'
+import React from 'react';
 
-const Header = ({title, subTitle}) => {
+const Header = ({ title, subTitle }) => {
   return (
-    <>
-    <h2 className="text-[30px] font-bold md:text-[36px] leading-[110%] text-[#2B3674] ">{title}</h2>
-    {subTitle && <p className="font-normal text-[16px] leading-[140%] text-black pt-3">{subTitle}</p> }
-    </>
-  )
-}
+    <header className="mb-6">
+      <h2 className="text-3xl md:text-4xl font-bold leading-tight text-[#2B3674] tracking-tight">
+        {title}
+      </h2>
+      {subTitle && (
+        <p className="mt-3 text-lg text-gray-600 max-w-3xl leading-relaxed">
+          {subTitle}
+        </p>
+      )}
+    </header>
+  );
+};
 
-export default Header
+export default Header;

@@ -7,14 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { aspectRatioOptions, creditFee, defaultValues, transformationTypes } from "../../constants";
 import { CustomField } from "./CustomField";
 import { useEffect, useState, useTransition } from "react";
@@ -25,6 +18,7 @@ import { updateCredits } from "../../lib/actions/User.actions";
 import { addImage, updateImage } from "../../lib/actions/Image.actions";
 import { getCldImageUrl } from "next-cloudinary";
 import { InsufficientCreditsModal } from "./InsufficientCredits";
+import { Loader2 } from "lucide-react";
 
 export const formSchema = z.object({
     title: z.string().min(1, "Title is required"),
@@ -60,7 +54,6 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
     });
 
     const onSubmit = async (values) => {
-        console.log(values);
         setIsSubmitting(true);
 
         if (data || image) {
@@ -99,7 +92,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                         router.push(`/transformations/${newImage._id}`)
                     }
                 }
-                 if (action === "Update") {
+                if (action === "Update") {
                     const updatedImage = await updateImage({
                         image: { ...imageData, _id: data._id },
                         userId,
@@ -132,17 +125,17 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 
     const inputHandler = (fieldName, value, type, onChange) => {
         debounce(() => {
-          setNewTransformation((prevState) => ({
-            ...prevState,
-            [type]: {
-              ...prevState?.[type],
-              [fieldName === 'prompt' ? 'prompt' : 'to' ]: value 
-            }
-          }))
+            setNewTransformation((prevState) => ({
+                ...prevState,
+                [type]: {
+                    ...prevState?.[type],
+                    [fieldName === 'prompt' ? 'prompt' : 'to']: value
+                }
+            }))
         }, 1000)();
-          
+
         return onChange(value)
-      }
+    }
 
     const transformHandler = () => {
         setIsTransforming(true);
@@ -156,27 +149,34 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
     };
 
     useEffect(() => {
-        if(image && (type === 'restore' || type === 'removeBackground')) {
-          setNewTransformation(transformationType.config)
+        if (image && (type === 'restore' || type === 'removeBackground')) {
+            setNewTransformation(transformationType.config)
         }
-      }, [image, transformationType.config, type])
+    }, [image, transformationType.config, type])
 
     return (
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8 p-6 bg-white shadow-lg rounded-xl"
+                className="space-y-8 p-8 bg-white shadow-xl rounded-2xl border border-gray-100"
             >
                 {creditBalance < Math.abs(creditFee) && <InsufficientCreditsModal />}
+
+                {/* Title Field */}
                 <CustomField
                     control={form.control}
                     name="title"
                     formLabel="Image Title"
                     render={({ field }) => (
-                        <Input {...field} placeholder="Enter image title" className="rounded-[16px] border-2 border-[#BCB6FF]/20 shadow-sm shadow-[#BCB6FF]/15 text-[#2B3674] disabled:opacity-100 font-semibold text-[16px] leading-[140%] h-[50px] md:h-[54px] focus-visible:ring-offset-0 px-4 py-3 focus-visible:ring-transparent" />
+                        <Input
+                            {...field}
+                            placeholder="Enter a descriptive title"
+                            className="rounded-xl border border-gray-200 bg-gray-50 text-gray-800 focus:border-[#624CF5] focus:ring-1 focus:ring-[#624CF5]/30 h-12 px-4 font-medium transition-all"
+                        />
                     )}
                 />
 
+                {/* Aspect Ratio Selector */}
                 {type === "fill" && (
                     <CustomField
                         control={form.control}
@@ -188,12 +188,16 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                                 onValueChange={(value) => selectHandler(value, field.onChange)}
                                 value={field.value}
                             >
-                                <SelectTrigger className="w-full border-2 border-[#BCB6FF]/20 shadow-sm shadow-[#BCB6FF]/15 rounded-[16px] h-[50px] md:h-[54px] text-[#2B3674] font-semibold text-[16px] leading-[140%] disabled:opacity-100 placeholder:text-[#7986AC]/50 px-4 py-3 focus:ring-offset-0 focus-visible:ring-transparent focus:ring-transparent focus-visible:ring-0 focus-visible:outline-none bg-white">
-                                    <SelectValue placeholder="Select size" />
+                                <SelectTrigger className="w-full rounded-xl border border-gray-200 bg-gray-50 text-gray-800 focus:border-[#624CF5] focus:ring-1 focus:ring-[#624CF5]/30 h-12 px-4 font-medium transition-all">
+                                    <SelectValue placeholder="Select aspect ratio" />
                                 </SelectTrigger>
-                                <SelectContent className="bg-white border border-gray-200 shadow-md rounded-lg">
+                                <SelectContent className="bg-white border border-gray-200 shadow-lg rounded-xl">
                                     {Object.keys(aspectRatioOptions).map((key) => (
-                                        <SelectItem key={key} value={key} className="py-3 cursor-pointer hover:bg-[#F4F7FE]">
+                                        <SelectItem
+                                            key={key}
+                                            value={key}
+                                            className="px-4 py-3 hover:bg-[#F4F7FE] transition-colors"
+                                        >
                                             {aspectRatioOptions[key].label}
                                         </SelectItem>
                                     ))}
@@ -203,53 +207,45 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                     />
                 )}
 
+                {/* Prompt Fields */}
                 {(type === "remove" || type === "recolor") && (
-                    <div className="flex flex-col gap-5 lg:flex-row lg:gap-10">
+                    <div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
                         <CustomField
                             control={form.control}
                             name="prompt"
-                            formLabel={
-                                type === "remove" ? "Object to remove" : "Object to recolor"
-                            }
+                            formLabel={type === "remove" ? "Object to remove" : "Object to recolor"}
                             className="w-full"
                             render={({ field }) => (
                                 <Input
                                     value={field.value}
-                                    className="rounded-[16px] border-2 border-[#BCB6FF]/20 shadow-sm shadow-[#BCB6FF]/15 text-[#2B3674] disabled:opacity-100 font-semibold text-[16px] leading-[140%] h-[50px] md:h-[54px] focus-visible:ring-offset-0 px-4 py-3 focus-visible:ring-transparent"
-                                    onChange={(e) => inputHandler(
-                                        'prompt',
-                                        e.target.value,
-                                        type,
-                                        field.onChange
-                                    )}
+                                    className="rounded-xl border border-gray-200 bg-gray-50 text-gray-800 focus:border-[#624CF5] focus:ring-1 focus:ring-[#624CF5]/30 h-12 px-4 font-medium transition-all"
+                                    placeholder={type === "remove" ? "Enter object to remove" : "Enter object to recolor"}
+                                    onChange={(e) => inputHandler('prompt', e.target.value, type, field.onChange)}
                                 />
                             )}
                         />
-                    </div>
-                )}
 
-                {type === "recolor" && (
-                    <CustomField
-                        control={form.control}
-                        name="color"
-                        formLabel="Replacement Color"
-                        className="w-full"
-                        render={({ field }) => (
-                            <Input
-                                value={field.value}
-                                className="rounded-[16px] border-2 border-[#BCB6FF]/20 shadow-sm shadow-[#BCB6FF]/15 text-[#2B3674] disabled:opacity-100 font-semibold text-[16px] leading-[140%] h-[50px] md:h-[54px] focus-visible:ring-offset-0 px-4 py-3 focus-visible:ring-transparent"
-                                onChange={(e) => inputHandler(
-                                    'color',
-                                    e.target.value,
-                                    "recolor",
-                                    field.onChange
+                        {type === "recolor" && (
+                            <CustomField
+                                control={form.control}
+                                name="color"
+                                formLabel="Replacement Color"
+                                className="w-full"
+                                render={({ field }) => (
+                                    <Input
+                                        value={field.value}
+                                        className="rounded-xl border border-gray-200 bg-gray-50 text-gray-800 focus:border-[#624CF5] focus:ring-1 focus:ring-[#624CF5]/30 h-12 px-4 font-medium transition-all"
+                                        placeholder="Enter hex color (e.g. #624CF5)"
+                                        onChange={(e) => inputHandler('color', e.target.value, "recolor", field.onChange)}
+                                    />
                                 )}
                             />
                         )}
-                    />
+                    </div>
                 )}
 
-                <div className="grid h-fit min-h-[200px] grid-cols-1 gap-5 py-4 md:grid-cols-2">
+                {/* Image Upload & Preview */}
+                <div className="grid gap-6 py-4 md:grid-cols-2">
                     <CustomField
                         control={form.control}
                         name="publicId"
@@ -261,10 +257,11 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                                 publicId={field.value}
                                 image={image}
                                 type={type}
-                                className="border rounded-lg"
+                                className="border border-gray-200 rounded-xl overflow-hidden shadow-sm"
                             />
                         )}
                     />
+
                     <TransformedImage
                         image={image}
                         type={type}
@@ -272,22 +269,41 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                         isTransforming={isTransforming}
                         setIsTransforming={setIsTransforming}
                         transformationConfig={transformationConfig}
-                        className="rounded-lg shadow-md"
+                        className="rounded-xl border border-gray-200 shadow-sm overflow-hidden"
                     />
                 </div>
 
+                {/* Action Buttons */}
                 <div className="flex flex-col gap-4">
                     <Button
                         type="button"
-                        className="bg-[url('/assets/images/gradient-bg.svg')] bg-cover rounded-full py-4 px-6 font-semibold text-[16px] leading-[140%]h-[50px] w-full md:h-[54px] text-white capitalize"
+                        className="bg-[url('/assets/images/gradient-bg.svg')] bg-cover cursor-pointer rounded-full py-4 px-6 font-semibold text-[16px] leading-[140%] h-[50px] w-full md:h-[54px] text-white capitalize flex items-center justify-center gap-2"
                         onClick={transformHandler}
                         disabled={isTransforming || newTransformation === null}
                     >
-                        {isTransforming ? "Transforming..." : "Apply Transformation"}
+                        {isTransforming ? (
+                            <>
+                                <Loader2 className="h-5 w-5 animate-spin" />
+                                Transforming...
+                            </>
+                        ) : (
+                            "Apply Transformation"
+                        )}
                     </Button>
 
-                    <Button type="submit" disabled={isSubmitting} className="bg-[url('/assets/images/gradient-bg.svg')] bg-cover rounded-full py-4 px-6 font-semibold text-[16px] leading-[140%]h-[50px] w-full md:h-[54px] text-white capitalize">
-                        {isSubmitting ? "Saving..." : "Save Image"}
+                    <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="bg-[url('/assets/images/gradient-bg.svg')] bg-cover cursor-pointer rounded-full py-4 px-6 font-semibold text-[16px] leading-[140%] h-[50px] w-full md:h-[54px] text-white capitalize flex items-center justify-center gap-2"
+                    >
+                        {isSubmitting ? (
+                            <>
+                                <Loader2 className="h-5 w-5 animate-spin" />
+                                Saving...
+                            </>
+                        ) : (
+                            "Save Image"
+                        )}
                     </Button>
                 </div>
             </form>

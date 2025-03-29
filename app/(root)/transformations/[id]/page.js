@@ -18,8 +18,6 @@ const ImageDetails = async ({ params }) => {
 
   const image = JSON.parse(JSON.stringify(imageData)); // ✅ Convert to plain JSON
 
-  console.log("Logged in User ID:", userId);
-console.log("Image Author ID:", image.author?.clerkId);
   return (
   <>
     <Header title={image.title} />

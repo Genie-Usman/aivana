@@ -22,7 +22,11 @@ const Layout = ({ children }) => {
           {children}
         </div>
       </div>
-      <Toaster />
+      <Toaster 
+          position="top-center"
+          theme="dark" // or "dark" or "system"
+          richColors={false} // Disable built-in colors
+        />
     </main>
   );
 };

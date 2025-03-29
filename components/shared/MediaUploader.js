@@ -4,10 +4,10 @@ import { dataUrl, getImageSize } from "../../lib/utils";
 import { CldImage } from "next-cloudinary";
 import Image from "next/image";
 import React from "react";
-import { toast } from "sonner";
 import dynamic from "next/dynamic";
+import { Toaster } from "./Toasts";
+import { PencilIcon } from "lucide-react";
 
-// Lazy-load Cloudinary Upload Widget to avoid hydration issues
 const CldUploadWidget = dynamic(() => import("next-cloudinary").then(mod => mod.CldUploadWidget), { ssr: false });
 
 const MediaUploader = ({ onChange, setImage, publicId, image, type }) => {
@@ -22,69 +22,112 @@ const MediaUploader = ({ onChange, setImage, publicId, image, type }) => {
 
     onChange(result?.info?.public_id);
 
-    toast.success("Image uploaded successfully! 1 credit deducted from your account.", {
-      duration: 3000,
-      className: "bg-green-100 text-green-900",
-    });
+    Toaster.success(
+      'Image uploaded successfully!',
+      'deducted from your account',
+      1
+    );
   };
 
   const errorHandler = () => {
-    toast.error("Something went wrong while uploading. Please try again!", {
-      duration: 3000,
-      className: "bg-red-100 text-red-900",
-    });
+    Toaster.error(
+      "Something went wrong while uploading.",
+      "Please try again!");
   };
 
   return (
     <CldUploadWidget
-      uploadPreset="musman_aivana"
-      options={{
-        multiple: false,
-        resourceType: "image",
-      }}
-      
-      onSuccess={successHandler}
-      onError={errorHandler}
-    >
+  uploadPreset="musman_aivana"
+  options={{
+    multiple: false,
+    resourceType: "image",
+    styles: {
+      palette: {
+        window: "#FFFFFF",
+        windowBorder: "#624CF5",
+        tabIcon: "#624CF5",
+        textDark: "#000000",
+        textLight: "#FFFFFF",
+        link: "#624CF5",
+        action: "#624CF5",
+        error: "#F44235",
+        inProgress: "#624CF5",
+        complete: "#20B832",
+        sourceBg: "#F4F7FE"
+      },
+      fonts: {
+        default: {
+          family: "IBM Plex Sans",
+          weight: "500"
+        }
+      }
+    }
+  }}
+  onSuccess={successHandler}
+  onError={errorHandler}
+>
       {({ open }) => (
-        <div className="flex flex-col gap-4">
-          <h3 className="font-bold text-[30px] leading-[140%] text-[#2B3674]">
-            Original
+        <div className="flex flex-col gap-6">
+          <h3 className="text-[30px] font-bold leading-[140%] text-[#2B3674]">
+            Original Image
           </h3>
 
           {publicId ? (
-            <div className="cursor-pointer overflow-hidden rounded-[10px]">
+            <div className="group relative overflow-hidden shadow-sm transition-all hover:shadow-md">
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20 opacity-0 transition-opacity group-hover:opacity-100 z-10" />
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (typeof open === "function") open();
+                }}
+                className="absolute right-3 top-3 z-20 flex items-center gap-1 rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-gray-700 shadow-md backdrop-blur-sm transition-all hover:bg-white hover:text-gray-900 opacity-0 group-hover:opacity-100"
+              >
+                <PencilIcon className="h-3 w-3" />
+                Replace
+              </button>
               <CldImage
-                width={getImageSize(type, image, "width") || 500}
-                height={getImageSize(type, image, "height") || 500}
+                width={getImageSize(type, image, "width") || 600}
+                height={getImageSize(type, image, "height") || 600}
                 src={publicId}
                 alt="Uploaded image"
                 sizes="(max-width: 767px) 100vw, 50vw"
                 placeholder="blur"
                 blurDataURL={dataUrl}
-                className="h-fit min-h-72 w-full rounded-[10px] border border-dashed bg-[#F4F7FE]/20 object-cover p-2"
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                 priority
               />
             </div>
           ) : (
             <div
-              className="flex flex-col items-center justify-center h-72 cursor-pointer gap-4 rounded-xl border border-dashed bg-[#F4F7FE]/30 p-6 shadow-inner transition-all hover:bg-[#F4F7FE]/50"
               onClick={(e) => {
                 e.preventDefault();
                 if (typeof open === "function") open();
               }}
+              className="flex h-80 cursor-pointer flex-col items-center justify-center gap-5 rounded-xl border-2 border-dashed border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100/50 p-8 text-center transition-all hover:border-gray-300 hover:bg-gray-50/80 hover:shadow-inner"
             >
-              <div className="flex items-center justify-center rounded-xl bg-white p-4 shadow-md shadow-[#BCB6FF]/40">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white p-3 shadow-lg shadow-indigo-100/50 ring-1 ring-gray-200/50">
                 <Image
                   src="/assets/icons/add.svg"
                   alt="Add Image"
                   width={24}
                   height={24}
+                  className="text-indigo-500"
                 />
               </div>
-              <p className="text-sm font-medium leading-tight text-gray-700">
-                Click here to upload an image
-              </p>
+              <div className="space-y-1">
+                <p className="text-lg font-medium text-gray-700">
+                  Upload your image
+                </p>
+                <p className="text-sm text-gray-500">
+                  PNG, JPG, or WEBP (Max 10MB)
+                </p>
+              </div>
+              <button
+                type="button"
+                className="mt-2 rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-indigo-700 hover:shadow-md focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Select File
+              </button>
             </div>
           )}
         </div>
