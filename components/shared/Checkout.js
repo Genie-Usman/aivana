@@ -60,7 +60,7 @@ const Checkout = ({ plan, amount, credits, buyerId }) => {
                 <Button
                     type="submit"
                     role="link"
-                    className="w-full rounded-full bg-[url('/assets/images/gradient-bg.svg')] bg-cover"
+                    className="w-full rounded-full bg-[url('/assets/images/gradient-bg.svg')] bg-cover cursor-pointer text-white"
                 >
                     Buy Credit
                 </Button>

@@ -21,12 +21,22 @@ const Home = async ({searchParams}) => {
             <Link
               key={link.route}
               href={link.route}
-              className="flex items-center justify-center flex-col gap-2"
+              className="flex items-center justify-center flex-col gap-2 group"
             >
-              <li className="flex items-center justify-center w-fit rounded-full bg-white p-4">
-                <Image src={link.icon} alt="image" width={24} height={24} />
-              </li>
-              <p className="font-medium text-[14px] leading-[120%] text-center text-white">{link.label}</p>
+              <div className="w-14 h-14 flex items-center justify-center">
+                <div 
+                  className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-sm transition-all duration-300 transform-gpu origin-center group-hover:shadow-md group-hover:shadow-purple-300/30 group-hover:scale-110"
+                >
+                  <Image 
+                    src={link.icon} 
+                    alt="image" 
+                    width={24} 
+                    height={24} 
+                    className="pointer-events-none"
+                  />
+                </div>
+              </div>
+              <p className="font-medium text-[14px] leading-[120%] text-center text-white transition-colors duration-300 group-hover:text-purple-200">{link.label}</p>
             </Link>
           ))}
         </ul>

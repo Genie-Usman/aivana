@@ -14,7 +14,6 @@ export async function POST(req) {
     return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
   }
 
-  // Extract and verify Svix headers
   const headerPayload = headers();
   const svix_id = headerPayload.get("svix-id");
   const svix_timestamp = headerPayload.get("svix-timestamp");
@@ -24,7 +23,6 @@ export async function POST(req) {
     return NextResponse.json({ error: "Invalid request headers" }, { status: 400 });
   }
 
-  // Parse and verify webhook payload
   const payloadBuffer = await req.arrayBuffer();
   const payloadString = Buffer.from(payloadBuffer).toString("utf-8");
   const wh = new Webhook(WEBHOOK_SECRET);
@@ -48,13 +46,11 @@ export async function POST(req) {
     if (eventType === "user.created") {
       const { email_addresses, image_url, first_name, last_name, username } = evt.data;
 
-      // 🔍 Check if user already exists in MongoDB
       const existingUser = await User.findOne({ clerkId: id });
       if (existingUser) {
         return NextResponse.json({ message: "User already exists", user: existingUser });
       }
 
-      // 🆕 Create new user
       const newUser = await createUser({
         clerkId: id,
         email: email_addresses?.[0]?.email_address || "no-email@example.com",
@@ -64,7 +60,6 @@ export async function POST(req) {
         photo: image_url || "",
       });
 
-      // Update Clerk metadata with MongoDB user ID
       if (newUser) {
         await clerkClient.users.updateUserMetadata(id, {
           publicMetadata: { userId: newUser._id.toString() },
@@ -77,7 +72,6 @@ export async function POST(req) {
     if (eventType === "user.updated") {
       const { image_url, first_name, last_name, username } = evt.data;
 
-      // Update user by Clerk ID
       const updatedUser = await updateUser(id, {
         firstName: first_name || "",
         lastName: last_name || "",

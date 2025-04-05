@@ -124,7 +124,7 @@ const MediaUploader = ({ onChange, setImage, publicId, image, type }) => {
               </div>
               <button
                 type="button"
-                className="mt-2 rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-indigo-700 hover:shadow-md focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="mt-2 rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-medium cursor-pointer text-white shadow-sm transition-all hover:bg-indigo-700 hover:shadow-md focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Select File
               </button>

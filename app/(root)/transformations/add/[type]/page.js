@@ -6,28 +6,21 @@ import { getUserById } from "../../../../../lib/actions/User.actions";
 import { redirect } from 'next/navigation';
 
 const AddTransformationTypes = async ({ params }) => {
-  const { type } = await params;
-  
-  // Get user authentication details
+  const { type } = await params;  
   const { userId } = await auth();
 
-  // Redirect if user is not authenticated
   if (!userId) {
     redirect("/sign-up");
   }
 
-  // Fetch user details
   const user = await getUserById(userId);
 
-  // Handle case where user is not found
   if (!user) {
     return <p className="text-red-500">Error: User not found.</p>;
   }
 
-  // Fetch transformation type
   const transformation = transformationTypes[type];
 
-  // Handle invalid transformation type
   if (!transformation) {
     return <p className="text-red-500">Error: Invalid transformation type.</p>;
   }
@@ -38,7 +31,7 @@ const AddTransformationTypes = async ({ params }) => {
       <section className='mt-10'>
       <TransformationForm
         action="Add"
-        userId={user._id}  // Safe now because we checked user existence
+        userId={user._id}
         type={transformation.type}
         creditBalance={user.creditBalance}
       />

@@ -3,7 +3,7 @@
 import { navLinks } from "../../constants";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
-import Link from "next/link";
+import CustomLink from "./CustomLink";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "../ui/button";
@@ -41,7 +41,7 @@ const Sidebar = () => {
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.95 }}
                 >
-                    <Link href="/" className="flex items-center gap-2">
+                    <CustomLink href="/" className="flex items-center gap-2">
                         <Image
                             src="/assets/images/logo-text.png"
                             alt="Logo"
@@ -49,7 +49,7 @@ const Sidebar = () => {
                             height={28}
                             className="transition-all hover:opacity-90"
                         />
-                    </Link>
+                    </CustomLink>
                 </motion.div>
 
                 {/* Navigation Links */}
@@ -70,7 +70,7 @@ const Sidebar = () => {
                                         key={link.route}
                                         variants={itemVariants}
                                     >
-                                        <Link href={link.route}>
+                                        <CustomLink href={link.route}>
                                             <motion.div
                                                 className={`flex items-center gap-4 px-4 py-3 rounded-3xl font-medium text-[16px] transition-all ${isActive
                                                         ? "bg-[url('/assets/images/gradient-bg.svg')] text-white shadow-lg"
@@ -103,7 +103,7 @@ const Sidebar = () => {
                                                     )}
                                                 </span>
                                             </motion.div>
-                                        </Link>
+                                        </CustomLink>
                                     </motion.li>
                                 );
                             })}
@@ -127,7 +127,7 @@ const Sidebar = () => {
                                         key={link.route}
                                         variants={itemVariants}
                                     >
-                                        <Link href={link.route}>
+                                        <CustomLink href={link.route}>
                                             <motion.div
                                                 className={`flex items-center gap-4 px-4 py-3 rounded-3xl font-medium text-[16px] transition-all ${isActive
                                                         ? "bg-[url('/assets/images/gradient-bg.svg')] text-white shadow-lg"
@@ -160,7 +160,7 @@ const Sidebar = () => {
                                                     )}
                                                 </span>
                                             </motion.div>
-                                        </Link>
+                                        </CustomLink>
                                     </motion.li>
                                 );
                             })}
@@ -199,7 +199,7 @@ const Sidebar = () => {
                             asChild
                             className="w-full flex items-center justify-center py-3 px-6 rounded-lg font-medium text-[16px] focus-visible:ring-0 bg-[url('/assets/images/gradient-bg.svg')] text-white shadow-lg hover:shadow-xl transition-all"
                         >
-                            <Link href="/sign-up">Login</Link>
+                            <CustomLink href="/sign-up">Login</CustomLink>
                         </Button>
                     </motion.div>
                 </SignedOut>

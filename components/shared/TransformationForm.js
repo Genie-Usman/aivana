@@ -18,7 +18,7 @@ import { updateCredits } from "../../lib/actions/User.actions";
 import { addImage, updateImage } from "../../lib/actions/Image.actions";
 import { getCldImageUrl } from "next-cloudinary";
 import { InsufficientCreditsModal } from "./InsufficientCredits";
-import { Loader2 } from "lucide-react";
+import { Loader2, Sparkles, Save } from "lucide-react";
 
 export const formSchema = z.object({
     title: z.string().min(1, "Title is required"),
@@ -158,7 +158,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8 p-8 bg-white shadow-xl rounded-2xl border border-gray-100"
+                className="space-y-8 p-8 "
             >
                 {creditBalance < Math.abs(creditFee) && <InsufficientCreditsModal />}
 
@@ -257,7 +257,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                                 publicId={field.value}
                                 image={image}
                                 type={type}
-                                className="border border-gray-200 rounded-xl overflow-hidden shadow-sm"
+                                className="border-2 border-purple-200/20 rounded-[16px] overflow-hidden shadow-lg shadow-purple-200/10"
                             />
                         )}
                     />
@@ -269,7 +269,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                         isTransforming={isTransforming}
                         setIsTransforming={setIsTransforming}
                         transformationConfig={transformationConfig}
-                        className="rounded-xl border border-gray-200 shadow-sm overflow-hidden"
+                        className="rounded-[16px] border-2 border-purple-200/20 shadow-lg shadow-purple-200/10 overflow-hidden"
                     />
                 </div>
 
@@ -277,7 +277,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                 <div className="flex flex-col gap-4">
                     <Button
                         type="button"
-                        className="bg-[url('/assets/images/gradient-bg.svg')] bg-cover cursor-pointer rounded-full py-4 px-6 font-semibold text-[16px] leading-[140%] h-[50px] w-full md:h-[54px] text-white capitalize flex items-center justify-center gap-2"
+                        className="bg-[#624CF5] hover:bg-[#513cd6] cursor-pointer rounded-full py-4 px-6 font-semibold text-[16px] leading-[140%] h-[50px] w-full md:h-[54px] text-white flex items-center justify-center gap-2 shadow-md shadow-[#624CF5]/20"
                         onClick={transformHandler}
                         disabled={isTransforming || newTransformation === null}
                     >
@@ -287,14 +287,17 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                                 Transforming...
                             </>
                         ) : (
-                            "Apply Transformation"
+                            <>
+                                <Sparkles className="h-5 w-5" />
+                                Apply Transformation
+                            </>
                         )}
                     </Button>
 
                     <Button
                         type="submit"
                         disabled={isSubmitting}
-                        className="bg-[url('/assets/images/gradient-bg.svg')] bg-cover cursor-pointer rounded-full py-4 px-6 font-semibold text-[16px] leading-[140%] h-[50px] w-full md:h-[54px] text-white capitalize flex items-center justify-center gap-2"
+                        className="bg-[url('/assets/images/gradient-bg.svg')] bg-cover cursor-pointer rounded-full py-4 px-6 font-semibold text-[16px] leading-[140%] h-[50px] w-full md:h-[54px] text-white flex items-center justify-center gap-2 shadow-md hover:shadow-lg shadow-[#624CF5]/20 transition-all duration-300 hover:opacity-95"
                     >
                         {isSubmitting ? (
                             <>
@@ -302,7 +305,10 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                                 Saving...
                             </>
                         ) : (
-                            "Save Image"
+                            <>
+                                <Save className="h-5 w-5" />
+                                Save Image
+                            </>
                         )}
                     </Button>
                 </div>

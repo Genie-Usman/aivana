@@ -8,15 +8,16 @@ import { Button } from "@/components/ui/button";
 import { getImageById } from "../../../../lib/actions/Image.actions";
 import { getImageSize } from "../../../../lib/utils";
 import { DeleteConfirmation } from "../../../../components/shared/DeleteConfirmation";
+import { Pencil } from "lucide-react";
 
 const ImageDetails = async ({ params }) => {
-  const { id } = params;
-  const { userId } = await auth(); // ✅ Ensure user authentication
+  const { id } = await params;
+  const { userId } = await auth();
 
-  const imageData = await getImageById(id); // ✅ Await DB fetch
+  const imageData = await getImageById(id);
   if (!imageData) return <p>Image not found</p>;
 
-  const image = JSON.parse(JSON.stringify(imageData)); // ✅ Convert to plain JSON
+  const image = JSON.parse(JSON.stringify(imageData));
 
   return (
   <>
@@ -86,14 +87,15 @@ const ImageDetails = async ({ params }) => {
           isTransforming={false}
           transformationConfig={image.config}
           hasDownload={true}
-          transformationURL={image.transformationURL} // ✅ Added transformationURL
+          transformationURL={image.transformationURL}
         />
       </div>
 
       {userId === image.author?.clerkId && (
         <div className="mt-4 space-y-4">
-          <Button asChild type="button" className="h-[50px] w-full rounded-full bg-[url('/assets/images/gradient-bg.svg')] bg-cover py-4 px-6 text-[16px] font-semibold leading-[140%] capitalize md:h-[54px]">
-            <Link href={`/transformations/${image._id}/update`}>
+          <Button asChild type="button" className="h-[50px] w-full text-white rounded-full bg-[url('/assets/images/gradient-bg.svg')] bg-cover py-4 px-6 text-[16px] font-semibold leading-[140%] capitalize md:h-[54px] shadow-md hover:shadow-lg shadow-[#624CF5]/20 transition-all duration-300 hover:opacity-95">
+            <Link href={`/transformations/${image._id}/update`} className="flex items-center justify-center gap-2 w-full">
+              <Pencil className="h-5 w-5" />
               Update Image
             </Link>
           </Button>
