@@ -146,14 +146,16 @@ const Credits = async () => {
               </div>
               <div>
                 <p className="font-bold text-lg text-[#2B3674]">Need more credits?</p>
-                <p className="text-sm text-[#718096]">Contact us for custom enterprise packages</p>
+                <p className="text-sm text-[#718096]">Contact our project contributor Ansh Gupta</p>
               </div>
             </div>
             <Button 
               variant="outline" 
               className="whitespace-nowrap min-w-[140px] h-12 rounded-full border-[#624cf5]/30 hover:border-[#624cf5] text-[#624cf5] hover:bg-[#624cf5]/5 font-medium cursor-pointer"
+              href="https://www.instagram.com/m0nessyyy/"
+              target="_blank"
             >
-              Contact Sales
+              insta: @m0nessyyy
             </Button>
           </div>
         </div>
