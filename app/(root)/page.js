@@ -11,7 +11,7 @@ const Collection = dynamic(() => import('../../components/shared/Collection'), {
 
 const Home = async ({ searchParams }) => {
   const page = parseInt(searchParams?.page) || 1;
-  const searchQuery = searchParams?.query || '';
+  const searchQuery = await searchParams?.query || '';
 
   const images = await getAllImages({ page, searchQuery });
 
