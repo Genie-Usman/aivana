@@ -235,7 +235,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                                     <Input
                                         value={field.value}
                                         className="rounded-xl border border-gray-200 bg-gray-50 text-gray-800 focus:border-[#624CF5] focus:ring-1 focus:ring-[#624CF5]/30 h-12 px-4 font-medium transition-all"
-                                        placeholder="Enter hex color (e.g. #624CF5)"
+                                        placeholder="Red"
                                         onChange={(e) => inputHandler('color', e.target.value, "recolor", field.onChange)}
                                     />
                                 )}

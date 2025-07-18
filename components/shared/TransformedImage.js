@@ -4,7 +4,7 @@ import { dataUrl, debounce, download, getImageSize } from "../../lib/utils";
 import { CldImage, getCldImageUrl } from "next-cloudinary";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const TransformedImage = ({
   image,
@@ -45,9 +45,7 @@ const TransformedImage = ({
         <h3 className="text-[30px] font-bold leading-[140%] text-[#2B3674]">Transformed Image</h3>
 
         {hasDownload && (
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-[#624CF5] shadow-sm hover:shadow-md transition-all cursor-pointer"
             onClick={downloadHandler}
           >
@@ -59,29 +57,40 @@ const TransformedImage = ({
               className="opacity-80 hover:opacity-100 transition-opacity"
             />
             <span className="text-sm font-medium">Download</span>
-          </motion.button>
+          </button>
         )}
       </div>
 
       {/* Transformed Image Section */}
       {image?.publicId && transformationConfig ? (
         <div className="relative overflow-hidden border border-gray-200 bg-gray-50 shadow-sm ">
-          {/* Loading Spinner (Before Image Loads) */}
-          {!isLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-100/80">
+          {/* Spinner or Processing Overlay */}
+          <AnimatePresence>
+            {(!isLoaded || isTransforming) && (
               <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                key="overlay"
+                className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-gray-400/80 backdrop-blur-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
               >
-                <Image
-                  src="/assets/icons/spinner.svg"
-                  alt="Loading"
-                  width={50}
-                  height={50}
-                />
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                >
+                  <Image
+                    src="/assets/icons/spinner.svg"
+                    alt="Processing"
+                    width={50}
+                    height={50}
+                  />
+                </motion.div>
+                {isTransforming && (
+                  <p className="mt-4 text-white font-medium">Processing your image...</p>
+                )}
               </motion.div>
-            </div>
-          )}
+            )}
+          </AnimatePresence>
 
           {/* Image with Motion Effect */}
           <motion.div
@@ -97,7 +106,7 @@ const TransformedImage = ({
               sizes="(max-width: 767px) 100vw, 50vw"
               placeholder={dataUrl}
               className="w-full object-cover transition-opacity duration-300"
-              onLoadingComplete={() => {
+              onLoad={() => {
                 setIsLoaded(true);
                 setIsTransforming?.(false);
               }}
@@ -122,7 +131,7 @@ const TransformedImage = ({
                   height={50}
                 />
               </motion.div>
-              <p className="absolute bottom-10 text-white font-medium">
+              <p className="absolute bottom-10 text-gray-900/80 font-medium">
                 Processing your image...
               </p>
             </div>
