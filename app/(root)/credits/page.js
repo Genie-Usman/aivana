@@ -142,18 +142,17 @@ const Credits = async () => {
                 />
               </div>
               <div>
-                <p className="font-bold text-lg text-[#2B3674]">Need more credits?</p>
-                <p className="text-sm text-[#718096]">Contact our project contributor Ansh Gupta</p>
+                <p className="font-bold text-lg text-[#2B3674]">Made by Usman</p>
               </div>
             </div>
-            <Button asChild>
+            <Button asChild className="border-1">
               <a
-                href="https://www.instagram.com/m0nessyyy/"
+                href="https://www.github.com/Genie-Usman"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="whitespace-nowrap min-w-[140px] h-12 rounded-full border-[#624cf5]/30 hover:border-[#624cf5] text-[#624cf5] hover:bg-[#624cf5]/5 font-medium cursor-pointer"
               >
-                insta: @m0nessyyy
+                Visit Github
               </a>
             </Button>
 

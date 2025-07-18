@@ -69,7 +69,7 @@ const Collection = ({ hasSearch = false, images, totalPages = 1, page }) => {
           <PaginationContent className="flex w-full items-center justify-between">
             <Button
               disabled={Number(page) <= 1}
-              className="group py-3 px-6 flex items-center gap-2 rounded-full font-medium text-white bg-[url('/assets/images/gradient-bg.svg')] transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group py-3 px-6 flex items-center gap-2 rounded-full font-medium text-white bg-[url('/assets/images/gradient-bg.svg')] transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               onClick={() => onPageChange("prev")}
             >
               <PaginationPrevious className="hover:bg-transparent hover:text-white cursor-pointer" />
@@ -81,7 +81,7 @@ const Collection = ({ hasSearch = false, images, totalPages = 1, page }) => {
             </p>
 
             <Button
-              className="group py-3 px-6 flex items-center gap-2 rounded-full font-medium text-white bg-[url('/assets/images/gradient-bg.svg')] transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group py-3 px-6 flex items-center gap-2 rounded-full font-medium text-white bg-[url('/assets/images/gradient-bg.svg')] transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               onClick={() => onPageChange("next")}
               disabled={Number(page) >= totalPages}
             >
